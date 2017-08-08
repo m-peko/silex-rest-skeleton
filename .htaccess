@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+
+    #1) redirect the client from "/silex-rest-skeleton/index.php/foo/bar" to "/foo/bar"
+    RewriteCond %{THE_REQUEST} /silex-rest-skeleton/index\.php/(.+)\sHTTP [NC]
+    RewriteRule ^ /%1 [NE,L,R]
+
+    #2)internally map "/foo/bar" to "/silex-rest-skeleton/index.php/foo/bar"
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.+)$ /silex-rest-skeleton/index.php/$1 [L]
+</IfModule>
