@@ -36,17 +36,11 @@ class User {
      */
     private $passwordHash;
 
-    /**
-     * @ORM\Column(name="api_key", type="string", length=36)
-     */
-    private $apiKey;
-
-    public function __construct($firstName, $lastName, $email, $passwordHash, $apiKey) {
+    public function __construct($firstName, $lastName, $email, $passwordHash) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
         $this->passwordHash = $passwordHash;
-        $this->apiKey = $apiKey;
     }
 
     public function getId() {
@@ -67,10 +61,6 @@ class User {
 
     public function getPasswordHash() {
         return $this->passwordHash;
-    }
-
-    public function getApiKey() {
-        return $this->apiKey;
     }
 
     public function setId($id) {
@@ -95,11 +85,6 @@ class User {
 
     public function setPasswordHash($passwordHash) {
         $this->passwordHash = $passwordHash;
-        return $this;
-    }
-
-    public function setApiKey($apiKey) {
-        $this->apiKey = $apiKey;
         return $this;
     }
 }

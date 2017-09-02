@@ -1,20 +1,34 @@
 <?php
 
 use Silex\Application;
+use Silex\Provider\ServiceControllerServiceProvider;
+use Silex\Provider\SerializerServiceProvider;
 use Silex\Provider\DoctrineServiceProvider;
 use Dflydev\Provider\DoctrineOrm\DoctrineOrmServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Debug\ErrorHandler;
+use Symfony\Component\Debug\ExceptionHandler;;
 
 $baseDir = __DIR__;
 
 require $baseDir.'/vendor/autoload.php';
+
+ini_set('display_errors', 0);
+/* Report all errors */
+error_reporting(-1);
+
+ErrorHandler::register();
+ExceptionHandler::register();
 
 $app = new Application();
 
 $app->error(function (Exception $e) use ($app) {
     return new Response("Something went wrong: ".$e->getMessage());
 });
+
+$app->register(new ServiceControllerServiceProvider());
+$app->register(new SerializerServiceProvider());
 
 $app->register(
     new DoctrineServiceProvider(),
@@ -51,21 +65,12 @@ $app->register(
     ]
 );
 
-$app->get('/', function(Application $app, Request $request) {
-    $user = new Entity\User("Marin", "Peko", "xyz@xyz.com", "xyz", "xyz");
+/* Load services */
+$servicesLoader = new App\ServicesLoader($app);
+$servicesLoader->bindServicesIntoContainer();
 
-    $em = $app['orm.em'];
-    $em->persist($user);
-    $em->flush();
-
-    return new Response("Success");
-});
-
-$app->get('/users/{id}', function(Application $app, Request $request, $id) {
-    $em = $app['orm.em'];
-    $user = $em->getRepository('Entity\User')->find($app->escape($id));
-
-    return new Response($user->getFirstName());
-});
+/* Load routes */
+$routesLoader = new App\RoutesLoader($app);
+$routesLoader->bindRoutesToControllers();
 
 $app->run();

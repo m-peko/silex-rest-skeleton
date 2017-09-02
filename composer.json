@@ -4,11 +4,16 @@
     "version": "1.0.0",
     "require": {
         "silex/silex": "^2.2",
-        "dflydev/doctrine-orm-service-provider": "^2.0"
+        "dflydev/doctrine-orm-service-provider": "^2.0",
+        "symfony/serializer": "^3.3",
+        "symfony/debug": "^3.3"
     },
     "autoload": {
         "psr-0": {
-            "Entity": "src/App/"
+            "Entity": "src/App/",
+            "Service": "src/App/",
+            "Controller": "src/App/",
+            "App": "src/"
         }
     }
 }
